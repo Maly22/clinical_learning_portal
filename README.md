@@ -25,9 +25,9 @@ pnpm db:lint
 ## Infrastructure
 
 - `supabase/migrations/` is the source of truth for database schema and Row Level Security.
-- Vercel environments are isolated: Development and Preview use non-production Supabase/Resend configuration; Production uses dedicated resources.
+- The project has two configurations: local development and Vercel. `main` deploys to Production; optional branch Previews reuse the same Vercel configuration.
 - Secrets are server-only. Never prefix service-role, Resend API, or webhook secrets with `NEXT_PUBLIC_`.
-- CI validates lint, types, and the production build. Vercel handles Preview and Production deployments after the repository is linked.
+- CI validates lint, types, and the production build. Vercel deploys `main` to Production and can create Previews for other branches using the same cloud services.
 - `GET /api/health` provides a no-cache liveness endpoint without exposing dependency or secret details.
 
 See [docs/deployment.md](docs/deployment.md) for first-time provisioning and release steps, and [docs/environments.md](docs/environments.md) for environment policy.

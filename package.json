@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@11.11.0",
   "engines": {
-    "node": ">=20.9 <23"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "next dev",
@@ -20,8 +20,6 @@
     "db:push": "supabase db push",
     "db:types": "supabase gen types typescript --local > src/types/database.ts",
     "db:lint": "supabase db lint --local --level warning",
-    "env:pull": "vercel env pull .env.local --environment=development",
-    "deploy:preview": "vercel",
     "deploy:production": "vercel --prod"
   },
   "dependencies": {

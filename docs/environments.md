@@ -1,23 +1,25 @@
 # Environment strategy
 
-## Development and Preview
+## Development
 
 - Local Next.js reads `.env.local`, which is ignored by Git, and uses the local stack from `supabase start`.
-- Vercel Preview uses a dedicated non-production hosted Supabase project; it never connects to a developer's local stack.
+- Run Next locally with `pnpm dev`, or run the built app with `pnpm build && pnpm start`.
+- There is no Vercel Development environment to configure.
 - `EMAIL_DELIVERY_MODE=log` suppresses outbound email by default.
-- For intentional email tests, set `EMAIL_DELIVERY_MODE=send` and `EMAIL_TEST_RECIPIENT` so every message is redirected to one controlled inbox.
 
-## Production
+## Vercel
 
-- Vercel Production uses a separate production Supabase project.
+- Vercel uses one Supabase project and one Resend configuration.
+- The `main` branch is the Production branch.
+- Optional branch Preview deployments reuse the same Vercel configuration; treat them as production-connected.
 - Production uses `EMAIL_DELIVERY_MODE=send` with a verified Resend sending domain.
 - Service-role and Resend keys are server-only and must never use a `NEXT_PUBLIC_` prefix.
 
 ## Free-tier model
 
-- Reserve Supabase's two active free projects for development/preview and production.
+- Local development uses the local Supabase stack; Vercel uses one hosted Supabase project.
 - Free Supabase projects can pause after inactivity.
 - Suppress development email to preserve Resend's quota and prevent accidental delivery.
-- Scope Vercel variables separately to Development, Preview, and Production.
+- Assign the same cloud variables to Vercel Preview and Production when branch Previews are enabled.
 
 If a server-side secret is printed, committed, or shared, rotate it immediately and update every affected environment.

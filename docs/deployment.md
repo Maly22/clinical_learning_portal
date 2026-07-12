@@ -2,7 +2,7 @@
 
 ## 1. Provision isolated resources
 
-Create separate Supabase projects for non-production and production. In Resend, verify the production sending domain and create separate API keys for non-production and production. Do not reuse production service-role credentials in Preview or Development.
+Create one hosted Supabase project for Vercel. In Resend, verify the sending domain and create one sending API key. Local development continues to use the local Supabase stack and logged email delivery.
 
 ## 2. Link and migrate Supabase
 
@@ -24,38 +24,33 @@ vercel login
 vercel link
 ```
 
-Set variables with `vercel env add NAME development|preview|production`, using the values documented in the committed `.env.*.example` files. Scope them as follows:
+Set variables in Vercel using `.env.production.example` as the checklist. Assign the same values to Production and Preview if branch Previews are enabled. Do not configure Vercel's Development scope.
 
-| Variable | Development | Preview | Production |
-| --- | --- | --- | --- |
-| `NEXT_PUBLIC_APP_ENV` | `development` | `preview` | `production` |
-| `NEXT_PUBLIC_APP_URL` | local URL | deployment URL policy | canonical URL |
-| Supabase URL/publishable key | non-production | non-production | production |
-| Supabase service-role key | non-production | non-production | production |
-| Resend credentials | test/non-production | test/non-production | production |
-| `EMAIL_DELIVERY_MODE` | `log` | `log` | `send` |
-| `EMAIL_TEST_RECIPIENT` | controlled inbox | controlled inbox | unset |
+| Variable | Vercel value |
+| --- | --- |
+| `NEXT_PUBLIC_APP_ENV` | `production` |
+| `NEXT_PUBLIC_APP_URL` | canonical URL |
+| Supabase URL and keys | hosted project |
+| Resend credentials | verified production sender |
+| `EMAIL_DELIVERY_MODE` | `send` |
+| `EMAIL_TEST_RECIPIENT` | unset |
 
-Never pass secrets as CLI command arguments, where they can enter shell history. Let the CLI prompt for values, or manage them in the Vercel dashboard. After configuration, pull only Development values locally:
-
-```bash
-pnpm env:pull
-```
+Never pass secrets as CLI command arguments, where they can enter shell history. Let the CLI prompt for values or manage them in the Vercel dashboard.
 
 ## 4. Configure Resend
 
-Verify SPF and DKIM for the sending domain, create an API key restricted to sending access, and set `RESEND_FROM_EMAIL` to an address on that domain. Configure a webhook endpoint only when the application has a verified webhook handler; retain `RESEND_WEBHOOK_SECRET` for signature validation. Do not enable Production sending until the domain is verified.
+Verify SPF and DKIM for the sending domain, keep the runtime API key restricted to sending, and set `RESEND_FROM_EMAIL` to an address on that domain. Use a separate full-access management credential to register `/api/webhooks/resend` for email lifecycle events, then retain its signing secret in `RESEND_WEBHOOK_SECRET`. Do not enable Production sending until the domain is verified.
 
 ## 5. Validate and deploy
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm check
-vercel deploy
-vercel deploy --prod
+git push origin your-branch # automatic Preview
+git push origin main        # automatic Production
 ```
 
-Promote only after the Preview deployment passes smoke tests. Confirm `/api/health`, authentication redirects, database access under real user roles, and a controlled transactional email. Roll back application code from Vercel; roll forward database changes with a new migration rather than editing an applied migration.
+Merge to `main` only after checks pass. If branch Previews are enabled, remember they use production-connected services. Confirm `/api/health`, authentication redirects, database access under real user roles, and a controlled transactional email. Roll back application code from Vercel; roll forward database changes with a new migration rather than editing an applied migration.
 
 ## Secret rotation
 
