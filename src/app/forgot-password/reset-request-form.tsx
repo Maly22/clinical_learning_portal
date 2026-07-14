@@ -1,0 +1,5 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+export function ForgotPasswordForm(){const [message,setMessage]=useState("");const [busy,setBusy]=useState(false);async function submit(event:React.FormEvent<HTMLFormElement>){event.preventDefault();setBusy(true);const form=new FormData(event.currentTarget);try{const supabase=createClient();await supabase.auth.resetPasswordForEmail(String(form.get("email")).trim().toLowerCase(),{redirectTo:`${window.location.origin}/auth/callback?next=/reset-password`});setMessage("If an account exists for that email, a password reset link has been sent.")}finally{setBusy(false)}}return <form className="auth-form" onSubmit={submit}><label className="field"><span>Email</span><input name="email" type="email" autoComplete="email" required/></label>{message&&<div className="form-success" role="status">{message}</div>}<button className="button auth-submit" disabled={busy}>{busy?"Sending…":"Send reset link"}</button><p className="auth-foot"><Link href="/sign-in">Return to sign in</Link></p></form>}

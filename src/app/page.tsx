@@ -36,7 +36,7 @@ export default function Home() {
         <nav aria-label="Primary navigation">
           <a href="#program">Program</a><a href="#locations">Locations</a><a href="#resources">Resources</a>
         </nav>
-        <div className="header-actions"><Link className="text-link" href="/dashboard">Sign in</Link><Link className="button small" href="/dashboard">Explore portal <ArrowRight size={15}/></Link></div>
+        <div className="header-actions"><Link className="text-link" href="/sign-in">Sign in</Link><Link className="button small" href="/sign-up">Create account <ArrowRight size={15}/></Link></div>
       </header>
 
       <section className="hero">
@@ -45,7 +45,7 @@ export default function Home() {
           <span className="eyebrow"><ShieldCheck size={14}/> Built for AMSA Phase II training</span>
           <h1>Arrive prepared.<br/><em>Learn with purpose.</em></h1>
           <p>One clinical development platform for 4N0 students, preceptors, and supervisors—across every Phase II location.</p>
-          <div className="hero-actions"><Link className="button" href="/dashboard">Preview your dashboard <ArrowRight size={17}/></Link><a className="button ghost" href="#program">See how it works</a></div>
+          <div className="hero-actions"><Link className="button" href="/sign-up">Start your clinical journey <ArrowRight size={17}/></Link><a className="button ghost" href="#program">See how it works</a></div>
           <div className="trust-row"><span><CheckCircle2/> Department-specific preparation</span><span><CheckCircle2/> Supervisor-approved content</span><span><CheckCircle2/> No patient data</span></div>
         </div>
         <div className="hero-panel" aria-label="Upcoming clinical rotation preview">
