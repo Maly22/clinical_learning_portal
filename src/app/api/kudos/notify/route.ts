@@ -11,17 +11,20 @@ export async function POST(request: NextRequest) {
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
 
-  const { data: ownedKudos } = await supabase.from("kudos").select("id,student_id").eq("id", kudosId).maybeSingle();
-  if (!ownedKudos || ownedKudos.student_id !== user.id) {
+  // Guests can't read pending kudos through RLS, so ownership is checked with the admin client.
+  // Guest submissions (no student_id) may only trigger a notification shortly after creation.
+  const admin = createAdminClient();
+  const { data: ownedKudos } = await admin.from("kudos").select("id,student_id,status,created_at").eq("id", kudosId).maybeSingle();
+  const isOwner = ownedKudos?.student_id != null && ownedKudos.student_id === user?.id;
+  const isFreshGuest = ownedKudos?.student_id == null && ownedKudos?.status === "pending" && Date.now() - new Date(ownedKudos.created_at).getTime() < 15 * 60 * 1000;
+  if (!ownedKudos || !(isOwner || isFreshGuest)) {
     return NextResponse.json({ error: "Kudos not found" }, { status: 404 });
   }
 
-  const admin = createAdminClient();
   const { data: kudos } = await admin
     .from("kudos")
-    .select("id,message,rating,decision_token,preceptor_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(location_program_id,departments(name),location_programs(locations(name)))")
+    .select("id,message,rating,decision_token,preceptor_name,student_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(location_program_id,departments(name),location_programs(locations(name)))")
     .eq("id", kudosId)
     .maybeSingle();
   if (!kudos) return NextResponse.json({ error: "Kudos not found" }, { status: 404 });
@@ -48,7 +51,7 @@ export async function POST(request: NextRequest) {
       await sendTransactionalEmail({
         to: email,
         subject: `New kudos to review — ${kudos.preceptor_name}`,
-        html: `<p>${student?.first_name ?? "A student"} submitted kudos for ${kudos.preceptor_name} in ${locationDepartment?.departments?.name ?? "a department"} at ${locationDepartment?.location_programs?.locations?.name ?? "a Phase II location"}.</p><p>Rating: ${kudos.rating} / 5</p><blockquote>${kudos.message}</blockquote><p><a href="${reviewUrl}">Review and approve or reject this kudos</a></p>`,
+        html: `<p>${student?.first_name ?? kudos.student_name ?? "A student"} submitted kudos for ${kudos.preceptor_name} in ${locationDepartment?.departments?.name ?? "a department"} at ${locationDepartment?.location_programs?.locations?.name ?? "a Phase II location"}.</p><p>Rating: ${kudos.rating} / 5</p><blockquote>${kudos.message}</blockquote><p><a href="${reviewUrl}">Review and approve or reject this kudos</a></p>`,
         idempotencyKey: `kudos-notify:${kudos.id}:${membership.user_id}`,
       });
     }),

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { ArrowRight, LogOut, Stethoscope } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
+// Piloting without public sign-up for now. Flip back to true to restore the header links.
+const SHOW_AUTH_LINKS = false;
+
 export async function SiteHeader() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -24,12 +27,12 @@ export async function SiteHeader() {
             <form action="/auth/sign-out" method="post"><button type="submit" className="text-link header-signout"><LogOut size={13} /> Sign out</button></form>
             <Link className="button small" href="/dashboard">Dashboard <ArrowRight size={15} /></Link>
           </>
-        ) : (
+        ) : SHOW_AUTH_LINKS ? (
           <>
             <Link className="text-link" href="/sign-in">Sign in</Link>
             <Link className="button small" href="/sign-up">Create account <ArrowRight size={15} /></Link>
           </>
-        )}
+        ) : null}
       </div>
     </header>
   );

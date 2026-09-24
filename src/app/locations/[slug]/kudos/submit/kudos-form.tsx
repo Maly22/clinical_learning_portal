@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 type Department = { id: string; name: string };
@@ -8,6 +8,11 @@ export function KudosForm({ departments, defaultDepartmentId }: { departments: D
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const [userId, setUserId] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
+  }, []);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -17,25 +22,27 @@ export function KudosForm({ departments, defaultDepartmentId }: { departments: D
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Please sign in to submit kudos.");
+      const guestName = user ? "" : String(form.get("student_name") || "").trim();
 
-      const { data, error: insertError } = await supabase
+      // Generate the id client-side: guests can't read back a pending row, so insert().select() would fail RLS.
+      const kudosId = crypto.randomUUID();
+      const { error: insertError } = await supabase
         .from("kudos")
         .insert({
-          student_id: user.id,
+          id: kudosId,
+          student_id: user?.id ?? null,
+          student_name: guestName || null,
           preceptor_name: String(form.get("preceptor_name")).trim(),
           location_department_id: String(form.get("location_department_id")),
           rating: Number(form.get("rating")),
           shift_date: form.get("shift_date") ? String(form.get("shift_date")) : null,
           message: String(form.get("message")),
-          display_student_name: form.get("anonymous") !== "on",
+          display_student_name: form.get("anonymous") !== "on" && Boolean(user || guestName),
           status: "pending",
-        })
-        .select("id")
-        .single();
+        });
       if (insertError) throw insertError;
 
-      await fetch("/api/kudos/notify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kudosId: data.id }) }).catch(() => {});
+      await fetch("/api/kudos/notify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kudosId }) }).catch(() => {});
       setDone(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to submit kudos");
@@ -48,6 +55,11 @@ export function KudosForm({ departments, defaultDepartmentId }: { departments: D
 
   return (
     <form className="auth-form kudos-submit-form" onSubmit={submit}>
+      {userId === null && (
+        <label className="field"><span>Your name</span>
+          <input name="student_name" placeholder="Leave blank to submit anonymously" maxLength={120} />
+        </label>
+      )}
       <label className="field"><span>Preceptor name</span>
         <input name="preceptor_name" required placeholder="e.g. MSgt Maya Chen" maxLength={120} />
       </label>

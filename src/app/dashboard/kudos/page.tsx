@@ -19,7 +19,7 @@ export default async function DashboardKudosPage() {
     const { data: kudos } = departmentIds.length
       ? await supabase
           .from("kudos")
-          .select("id,message,rating,display_student_name,created_at,preceptor_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(departments(name))")
+          .select("id,message,rating,display_student_name,created_at,preceptor_name,student_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(departments(name))")
           .in("location_department_id", departmentIds)
           .eq("status", "pending")
           .order("created_at")
@@ -35,7 +35,7 @@ export default async function DashboardKudosPage() {
 
   const { data: received } = await supabase
     .from("kudos")
-    .select("id,message,rating,display_student_name,published_at,preceptor_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(departments(name))")
+    .select("id,message,rating,display_student_name,published_at,preceptor_name,student_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(departments(name))")
     .eq("preceptor_id", membership.userId)
     .eq("status", "approved")
     .order("published_at", { ascending: false });
@@ -52,7 +52,7 @@ export default async function DashboardKudosPage() {
             <article className="kudos-card" key={item.id}>
               <StarRating rating={item.rating} />
               <p>&ldquo;{item.message}&rdquo;</p>
-              <span>— {item.display_student_name && student ? `${student.first_name} ${student.last_name}` : "Anonymous student"} · {department?.name}</span>
+              <span>— {item.display_student_name && (student ? `${student.first_name} ${student.last_name}` : item.student_name) || "Anonymous student"} · {department?.name}</span>
             </article>
           );
         })}

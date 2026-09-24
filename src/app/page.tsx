@@ -40,7 +40,8 @@ export default async function Home() {
           <span className="eyebrow"><ShieldCheck size={14}/> Built for AMSA Phase II training</span>
           <h1>Arrive prepared.<br/><em>Learn with purpose.</em></h1>
           <p>One clinical development platform for 4N0 students, preceptors, and supervisors—across every Phase II location.</p>
-          <div className="hero-actions"><Link className="button" href="/sign-up">Start your clinical journey <ArrowRight size={17}/></Link><Link className="button ghost" href="/about">See how it works</Link></div>
+          {/* Sign-up CTA hidden while piloting without public account creation; restore the /sign-up Link to bring it back. */}
+          <div className="hero-actions"><Link className="button" href="/about">See how it works <ArrowRight size={17}/></Link></div>
           <div className="trust-row"><span><CheckCircle2/> Department-specific preparation</span><span><CheckCircle2/> Supervisor-approved content</span><span><CheckCircle2/> No patient data</span></div>
         </div>
         <div className="hero-image-wrapper"><img src={`${CDN}/6a1bc34fa8018a51046ad0ab_Picture1.png`} alt="" className="hero-image" /></div>

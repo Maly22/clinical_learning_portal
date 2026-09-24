@@ -82,7 +82,7 @@ export default async function DepartmentDetailPage({ params }: { params: Promise
               <StarRating rating={item.rating} />
               <strong className="kudos-preceptor">{item.preceptor_name}</strong>
               <p>&ldquo;{item.message}&rdquo;</p>
-              <span>— {item.display_student_name && item.profiles ? `${item.profiles.first_name} ${item.profiles.last_name}` : "Anonymous student"}</span>
+              <span>— {item.display_student_name && (item.profiles ? `${item.profiles.first_name} ${item.profiles.last_name}` : item.student_name) || "Anonymous student"}</span>
             </article>
           ))}
         </div>

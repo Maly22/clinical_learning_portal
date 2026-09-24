@@ -1,6 +1,5 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getLocationBySlug, getLocationDepartments } from "@/lib/data/locations";
-import { createClient } from "@/lib/supabase/server";
 import { KudosForm } from "./kudos-form";
 
 export default async function SubmitKudosPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ department?: string }> }) {
@@ -8,10 +7,6 @@ export default async function SubmitKudosPage({ params, searchParams }: { params
   const { department } = await searchParams;
   const result = await getLocationBySlug(slug);
   if (!result?.program) notFound();
-
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect(`/sign-in?next=/locations/${slug}/kudos/submit`);
 
   const departments = await getLocationDepartments(result.program.id);
 

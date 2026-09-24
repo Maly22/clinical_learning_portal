@@ -12,7 +12,7 @@ export default async function KudosReviewPage({ params, searchParams }: { params
   const admin = createAdminClient();
   const { data: kudos } = await admin
     .from("kudos")
-    .select("id,message,rating,status,preceptor_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(departments(name),location_programs(locations(name)))")
+    .select("id,message,rating,status,preceptor_name,student_name,student:profiles!kudos_student_id_fkey(first_name,last_name),location_departments(departments(name),location_programs(locations(name)))")
     .eq("decision_token", token)
     .maybeSingle();
   if (!kudos) notFound();
@@ -27,7 +27,7 @@ export default async function KudosReviewPage({ params, searchParams }: { params
         <span className="pending-icon"><ShieldCheck /></span>
         <span className="eyebrow">Kudos review</span>
         <h1>{kudos.preceptor_name}</h1>
-        <p>Submitted by {student?.first_name} {student?.last_name} · {locationDepartment?.departments?.name} · {locationDepartment?.location_programs?.locations?.name}</p>
+        <p>Submitted by {student ? `${student.first_name} ${student.last_name}` : kudos.student_name || "a guest submitter"} · {locationDepartment?.departments?.name} · {locationDepartment?.location_programs?.locations?.name}</p>
         <StarRating rating={kudos.rating} size={20} />
         <blockquote>&ldquo;{kudos.message}&rdquo;</blockquote>
 

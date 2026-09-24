@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { StarRating } from "@/components/kudos/star-rating";
 
 type Kudos = {
-  id: string; message: string; rating: number; display_student_name: boolean; created_at: string; preceptor_name: string;
+  id: string; message: string; rating: number; display_student_name: boolean; created_at: string; preceptor_name: string; student_name: string | null;
   student: { first_name: string; last_name: string } | null;
   location_departments: { departments: { name: string } | null } | null;
 };
@@ -31,7 +31,7 @@ export function KudosQueue({ initialKudos }: { initialKudos: Kudos[] }) {
         items.map((item) => (
           <article className="queue-row kudos-queue-row" key={item.id}>
             <div>
-              <strong>{item.display_student_name && item.student ? `${item.student.first_name} ${item.student.last_name}` : "Anonymous student"} → {item.preceptor_name}</strong>
+              <strong>{item.display_student_name && (item.student ? `${item.student.first_name} ${item.student.last_name}` : item.student_name) || "Anonymous student"} → {item.preceptor_name}</strong>
               <span>{item.location_departments?.departments?.name}</span>
               <StarRating rating={item.rating} />
               <p>&ldquo;{item.message}&rdquo;</p>

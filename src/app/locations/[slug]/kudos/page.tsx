@@ -23,7 +23,7 @@ export default async function LocationKudosPage({ params }: { params: Promise<{ 
             <StarRating rating={item.rating} />
             <strong className="kudos-preceptor">{item.preceptor_name}</strong>
             <p>&ldquo;{item.message}&rdquo;</p>
-            <span>— {item.display_student_name && item.profiles ? `${item.profiles.first_name} ${item.profiles.last_name}` : "Anonymous student"} · {item.department?.name}</span>
+            <span>— {item.display_student_name && (item.profiles ? `${item.profiles.first_name} ${item.profiles.last_name}` : item.student_name) || "Anonymous student"} · {item.department?.name}</span>
           </article>
         ))}
       </div>

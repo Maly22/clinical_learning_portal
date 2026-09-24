@@ -61,7 +61,7 @@ export const getDepartmentDetail = cache(async (locationProgramId: string, deptS
 
   const { data: kudos } = await supabase
     .from("kudos")
-    .select("id,message,rating,display_student_name,published_at,preceptor_name,profiles!kudos_student_id_fkey(first_name,last_name)")
+    .select("id,message,rating,display_student_name,published_at,preceptor_name,student_name,profiles!kudos_student_id_fkey(first_name,last_name)")
     .eq("location_department_id", locationDepartment.id)
     .eq("status", "approved")
     .order("published_at", { ascending: false });
@@ -69,7 +69,7 @@ export const getDepartmentDetail = cache(async (locationProgramId: string, deptS
   return {
     locationDepartment: locationDepartment as unknown as { id: string; display_name: string | null; required_hours: number; overview: string | null; welcome_video_url: string | null; departments: { name: string; slug: string; description: string | null } },
     procedures: procedures ?? [],
-    kudos: (kudos ?? []) as unknown as Array<{ id: string; message: string; rating: number; display_student_name: boolean; published_at: string; preceptor_name: string; profiles: { first_name: string; last_name: string } | null }>,
+    kudos: (kudos ?? []) as unknown as Array<{ id: string; message: string; rating: number; display_student_name: boolean; published_at: string; preceptor_name: string; student_name: string | null; profiles: { first_name: string; last_name: string } | null }>,
   };
 });
 
@@ -172,14 +172,14 @@ export const getLocationKudos = cache(async (locationProgramId: string) => {
 
   const { data } = await supabase
     .from("kudos")
-    .select("id,message,rating,display_student_name,published_at,location_department_id,preceptor_name,profiles!kudos_student_id_fkey(first_name,last_name)")
+    .select("id,message,rating,display_student_name,published_at,location_department_id,preceptor_name,student_name,profiles!kudos_student_id_fkey(first_name,last_name)")
     .in("location_department_id", departmentIds)
     .eq("status", "approved")
     .order("published_at", { ascending: false });
 
   const departmentById = new Map((departments ?? []).map((item) => [item.id, item.departments as unknown as { name: string; slug: string } | null]));
   return (data ?? []).map((item) => ({ ...item, department: departmentById.get(item.location_department_id) ?? null })) as unknown as Array<{
-    id: string; message: string; rating: number; display_student_name: boolean; published_at: string; preceptor_name: string;
+    id: string; message: string; rating: number; display_student_name: boolean; published_at: string; preceptor_name: string; student_name: string | null;
     profiles: { first_name: string; last_name: string } | null; department: { name: string; slug: string } | null;
   }>;
 });
