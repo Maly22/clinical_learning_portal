@@ -267,3 +267,4 @@
 .feedback-scale-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
 .feedback-thanks{text-align:center;padding:10px 0}.feedback-thanks svg{color:var(--sky)}.feedback-thanks p{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 20px}
 @media(max-width:620px){.dash-feedback{margin-top:24px}}
+.role-select{display:flex;flex-direction:column;gap:4px}.role-select select{border:1px solid var(--line);border-radius:4px;padding:7px 9px;background:white;color:var(--navy2);font-size:12px;font-weight:700;max-width:170px}.role-select .form-error{font-size:10px;padding:5px 7px}
