@@ -7,9 +7,9 @@ import {
   HeartHandshake,
   MapPin,
   ShieldCheck,
-  Stethoscope,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { ImageSlider } from "@/components/image-slider";
 import { createClient } from "@/lib/supabase/server";
 
@@ -62,7 +62,7 @@ export default async function Home() {
         <Link href="/dashboard" className="button light">Enter the learning portal <ArrowRight size={16}/></Link>
       </section>
 
-      <footer><div className="brand inverse"><span className="brand-mark"><Stethoscope size={20}/></span><span><strong>PhasePrep</strong><small>Navigator</small></span></div><p>Foundational clinical preparation for AMSA Phase II training.</p><span>Training support only · No PHI</span></footer>
+      <SiteFooter />
     </main>
   );
 }

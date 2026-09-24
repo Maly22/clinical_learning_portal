@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { listLocations } from "@/lib/data/locations";
 
 export default async function LocationsIndexPage() {
@@ -27,6 +28,7 @@ export default async function LocationsIndexPage() {
           ))}
         </div>
       </section>
+      <SiteFooter />
     </main>
   );
 }

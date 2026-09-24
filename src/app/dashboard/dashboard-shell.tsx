@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FeedbackButton } from "@/components/feedback/feedback-button";
 import {
   CalendarDays, ClipboardCheck, ClipboardList, HeartHandshake, LayoutDashboard,
   LogOut, MapPin, NotebookPen, Stethoscope, UserRound, UsersRound,
@@ -52,7 +53,7 @@ export function DashboardShell({ membership, activeHref, children }: { membershi
       </aside>
       <section className="dashboard-main">
         <header className="dash-topbar"><span className="location-select"><MapPin size={14} /> {membership.locationName || "—"} · {membership.afscCode}</span></header>
-        <div className="dash-content">{children}</div>
+        <div className="dash-content">{children}<div className="dash-feedback"><FeedbackButton className="feedback-trigger dark" /></div></div>
       </section>
     </div>
   );

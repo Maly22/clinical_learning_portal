@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getLocationBySlug } from "@/lib/data/locations";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { LocationSubnav } from "./location-subnav";
 
 export default async function LocationLayout({ children, params }: { children: React.ReactNode; params: Promise<{ slug: string }> }) {
@@ -19,6 +20,7 @@ export default async function LocationLayout({ children, params }: { children: R
       </section>
       <LocationSubnav slug={slug} />
       <div className="location-content">{children}</div>
+      <SiteFooter />
     </main>
   );
 }

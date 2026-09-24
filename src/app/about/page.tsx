@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {
   ArrowRight, BarChart3, Compass, Gauge, LineChart, MapPin,
-  Repeat, ShieldCheck, Sparkles, Stethoscope, Target,
+  Repeat, ShieldCheck, Sparkles, Target,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 
 const pillars = [
   { icon: ShieldCheck, title: "Prepare", copy: "PhasePrep Navigator equips you with the knowledge and confidence you need before entering any clinical department. From expectations to workflows, you'll understand what's ahead so you can focus on learning — not guessing." },
@@ -75,7 +76,7 @@ export default function AboutPage() {
         <Link href="/locations" className="button light">Explore locations <MapPin size={16} /><ArrowRight size={16} /></Link>
       </section>
 
-      <footer><div className="brand inverse"><span className="brand-mark"><Stethoscope size={20} /></span><span><strong>PhasePrep</strong><small>Navigator</small></span></div><p>Foundational clinical preparation for AMSA Phase II training.</p><span>Training support only · No PHI</span></footer>
+      <SiteFooter />
     </main>
   );
 }

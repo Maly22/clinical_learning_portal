@@ -254,3 +254,16 @@
 .handbook-table th{background:var(--sky-tint);color:#0a3161;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
 @media(max-width:620px){.handbook-group h2{font-size:24px}}
 .skill-signin-hint{font-size:11px;color:var(--muted);margin-top:10px}
+
+/* Portal feedback survey */
+.feedback-trigger{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(191,227,255,.35);background:transparent;color:var(--sky-light);border-radius:4px;padding:9px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}.feedback-trigger:hover{background:rgba(90,193,255,.12);border-color:var(--sky)}.feedback-trigger.dark{color:var(--navy2);border-color:var(--sky-tint-border);background:white}.feedback-trigger.dark:hover{background:var(--sky-tint)}
+.dash-feedback{display:flex;justify-content:center;margin-top:36px}
+.feedback-dialog{width:min(460px,calc(100vw - 32px));border:0;border-radius:8px;padding:30px 28px 26px;color:var(--ink);background:white;box-shadow:0 24px 70px rgba(5,13,29,.35)}.feedback-dialog::backdrop{background:rgba(5,13,29,.6)}
+.feedback-close{position:absolute;top:14px;right:14px;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:4px}
+.feedback-form h2,.feedback-thanks h2{font-family:Georgia,serif;font-weight:400;font-size:26px;margin:8px 0 18px}
+.feedback-form fieldset{border:0;padding:0;margin:0 0 4px}.feedback-form legend{font-size:13px;font-weight:700;margin-bottom:10px;padding:0}.feedback-form small{font-weight:400;color:var(--muted)}
+.feedback-form textarea,.feedback-form select{width:100%;border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:white;color:var(--ink);font-size:14px;resize:vertical}
+.feedback-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.feedback-scale button{border:1px solid var(--line);background:var(--cream);border-radius:4px;padding:11px 0;font-size:15px;font-weight:700;color:var(--navy2);cursor:pointer}.feedback-scale button:hover{border-color:var(--sky)}.feedback-scale button.active{background:var(--navy2);border-color:var(--navy2);color:white}
+.feedback-scale-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
+.feedback-thanks{text-align:center;padding:10px 0}.feedback-thanks svg{color:var(--sky)}.feedback-thanks p{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 20px}
+@media(max-width:620px){.dash-feedback{margin-top:24px}}
