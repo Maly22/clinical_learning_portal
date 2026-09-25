@@ -11,6 +11,7 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ImageSlider } from "@/components/image-slider";
+import { HowItWorksVideo } from "@/components/how-it-works-video";
 import { createClient } from "@/lib/supabase/server";
 
 const CDN = "https://cdn.prod.website-files.com/6a1b2afe6f5ec901d7298573";
@@ -29,6 +30,7 @@ export default async function Home() {
     .select("short_name,slug")
     .eq("is_active", true)
     .order("short_name");
+  const { data: videoSetting } = await supabase.from("site_settings").select("value").eq("key", "how_it_works_video_url").maybeSingle();
 
   return (
     <main>
@@ -41,7 +43,7 @@ export default async function Home() {
           <h1>Arrive prepared.<br/><em>Learn with purpose.</em></h1>
           <p>One clinical development platform for 4N0 students, preceptors, and supervisors—across every Phase II location.</p>
           {/* Sign-up CTA hidden while piloting without public account creation; restore the /sign-up Link to bring it back. */}
-          <div className="hero-actions"><Link className="button" href="/about">See how it works <ArrowRight size={17}/></Link></div>
+          <div className="hero-actions"><HowItWorksVideo url={videoSetting?.value ?? null} /></div>
           <div className="trust-row"><span><CheckCircle2/> Department-specific preparation</span><span><CheckCircle2/> Supervisor-approved content</span><span><CheckCircle2/> No patient data</span></div>
         </div>
         <div className="hero-image-wrapper"><img src={`${CDN}/6a1bc34fa8018a51046ad0ab_Picture1.png`} alt="" className="hero-image" /></div>

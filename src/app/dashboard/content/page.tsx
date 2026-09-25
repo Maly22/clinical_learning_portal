@@ -13,6 +13,7 @@ const TABS = [
   ["procedures", "Procedures", "departments"],
   ["contacts", "Contacts", "contact"],
   ["events", "Events", "events"],
+  ["site", "Site", ""],
 ] as const;
 type Tab = (typeof TABS)[number][0];
 
@@ -24,8 +25,9 @@ export default async function EditContentPage({ searchParams }: { searchParams: 
   if (membership.role !== "supervisor" && membership.role !== "platform_admin") redirect("/dashboard");
 
   const { tab: requestedTab } = await searchParams;
-  const tab: Tab = TABS.some(([key]) => key === requestedTab) ? (requestedTab as Tab) : "handbook";
   const isAdmin = membership.role === "platform_admin";
+  const visibleTabs = TABS.filter(([key]) => key !== "site" || isAdmin);
+  const tab: Tab = visibleTabs.some(([key]) => key === requestedTab) ? (requestedTab as Tab) : "handbook";
 
   const supabase = await createClient();
   const { data: program } = await supabase.from("location_programs").select("location_id").eq("id", membership.locationProgramId).single();
@@ -162,7 +164,18 @@ export default async function EditContentPage({ searchParams }: { searchParams: 
     );
   }
 
+  if (tab === "site") {
+    const { data: settings } = await supabase.from("site_settings").select("id,key,label,value").order("label");
+    intro = "Site-wide settings. For the “See how it works” video, paste a YouTube or Loom link, or a direct link to a video file. Leave it blank to use the built-in walkthrough.";
+    const fields: Field[] = [{ name: "value", label: "Value", type: "text", hint: "e.g. https://youtu.be/… or https://www.loom.com/share/…" }];
+    editor = (
+      <ContentEditor table="site_settings" itemLabel="Setting" titleField="label" fields={fields}
+        items={(settings ?? []) as Item[]} canAdd={false} canDelete={false} />
+    );
+  }
+
   const sitePath = TABS.find(([key]) => key === tab)?.[2];
+  const viewHref = tab === "site" ? "/" : `/locations/${membership.locationSlug}/${sitePath}`;
 
   return (
     <DashboardShell membership={membership} activeHref="/dashboard/content">
@@ -172,12 +185,12 @@ export default async function EditContentPage({ searchParams }: { searchParams: 
         <p>Change what students see on the {membership.locationName} pages. Saved changes go live right away.</p>
       </div>
       <nav className="content-tabs">
-        {TABS.map(([key, label]) => <Link key={key} href={`/dashboard/content?tab=${key}`} className={key === tab ? "active" : ""}>{label}</Link>)}
+        {visibleTabs.map(([key, label]) => <Link key={key} href={`/dashboard/content?tab=${key}`} className={key === tab ? "active" : ""}>{label}</Link>)}
       </nav>
       <section className="queue-card content-card">
         <div className="content-intro">
           <p>{intro}</p>
-          {membership.locationSlug && <Link className="text-link" href={`/locations/${membership.locationSlug}/${sitePath}`} target="_blank">View on site <ExternalLink size={13} /></Link>}
+          {membership.locationSlug && <Link className="text-link" href={viewHref} target="_blank">View on site <ExternalLink size={13} /></Link>}
         </div>
         {editor}
       </section>

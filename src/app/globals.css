@@ -289,3 +289,9 @@
 .feedback-list{padding:6px 24px}.feedback-row{padding:16px 0;border-bottom:1px solid #edf0ef}.feedback-row:last-child{border-bottom:0}.feedback-row-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.feedback-row-head .star-rating{color:#e0a100}.feedback-row-head .tag{font-size:9px;text-transform:uppercase;padding:4px 7px;border-radius:3px;background:var(--sky-tint);color:#0a3161}.feedback-row-head time{margin-left:auto;font-size:11px;color:#7b898e}.feedback-row p{margin:9px 0 6px;font-size:13px;line-height:1.6;white-space:pre-wrap}.feedback-row .feedback-no-comment{color:#9aa7ac;font-style:italic}.feedback-row small{font-size:11px;color:#7b898e}.feedback-row small a{color:var(--navy2);text-decoration:underline}
 @media(max-width:900px){.feedback-stats{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.feedback-list{padding:4px 14px}.content-tabs .feedback-toggle{margin-left:0}}
+
+/* "See how it works" video */
+.hero-actions .button{border:0;cursor:pointer}
+.video-dialog{width:min(1100px,calc(100vw - 32px));max-width:none;border:0;padding:0;background:transparent;overflow:visible}.video-dialog::backdrop{background:rgba(5,13,29,.85)}
+.video-frame{aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}.video-frame video,.video-frame iframe{width:100%;height:100%;border:0;display:block}
+.video-close{position:absolute;top:-44px;right:0;border:0;background:transparent;color:white;cursor:pointer;padding:6px}
