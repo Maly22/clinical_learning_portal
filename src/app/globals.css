@@ -258,7 +258,7 @@
 /* Portal feedback survey */
 .feedback-trigger{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(191,227,255,.35);background:transparent;color:var(--sky-light);border-radius:4px;padding:9px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}.feedback-trigger:hover{background:rgba(90,193,255,.12);border-color:var(--sky)}.feedback-trigger.dark{color:var(--navy2);border-color:var(--sky-tint-border);background:white}.feedback-trigger.dark:hover{background:var(--sky-tint)}
 .dash-feedback{display:flex;justify-content:center;margin-top:36px}
-.feedback-dialog{width:min(460px,calc(100vw - 32px));border:0;border-radius:8px;padding:30px 28px 26px;color:var(--ink);background:white;box-shadow:0 24px 70px rgba(5,13,29,.35)}.feedback-dialog::backdrop{background:rgba(5,13,29,.6)}
+.feedback-dialog{margin:auto;width:min(460px,calc(100vw - 32px));border:0;border-radius:8px;padding:30px 28px 26px;color:var(--ink);background:white;box-shadow:0 24px 70px rgba(5,13,29,.35)}.feedback-dialog::backdrop{background:rgba(5,13,29,.6)}
 .feedback-close{position:absolute;top:14px;right:14px;border:0;background:transparent;color:var(--muted);cursor:pointer;padding:4px}
 .feedback-form h2,.feedback-thanks h2{font-family:Georgia,serif;font-weight:400;font-size:26px;margin:8px 0 18px}
 .feedback-form fieldset{border:0;padding:0;margin:0 0 4px}.feedback-form legend{font-size:13px;font-weight:700;margin-bottom:10px;padding:0}.feedback-form small{font-weight:400;color:var(--muted)}
@@ -292,6 +292,6 @@
 
 /* "See how it works" video */
 .hero-actions .button{border:0;cursor:pointer}
-.video-dialog{width:min(1100px,calc(100vw - 32px));max-width:none;border:0;padding:0;background:transparent;overflow:visible}.video-dialog::backdrop{background:rgba(5,13,29,.85)}
+.video-dialog{margin:auto;width:min(1100px,calc(100vw - 32px),calc((100vh - 120px) * 16 / 9));max-width:none;border:0;padding:0;background:transparent;overflow:visible}.video-dialog::backdrop{background:rgba(5,13,29,.85)}
 .video-frame{aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}.video-frame video,.video-frame iframe{width:100%;height:100%;border:0;display:block}
 .video-close{position:absolute;top:-44px;right:0;border:0;background:transparent;color:white;cursor:pointer;padding:6px}
