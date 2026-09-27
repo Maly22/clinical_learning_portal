@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FeedbackButton } from "@/components/feedback/feedback-button";
 import {
-  CalendarDays, ClipboardCheck, ClipboardList, FilePenLine, HeartHandshake, LayoutDashboard,
+  BarChart3, CalendarDays, ClipboardCheck, ClipboardList, FilePenLine, HeartHandshake, LayoutDashboard,
   LogOut, MapPin, Menu, MessageSquareHeart, NotebookPen, Stethoscope, UserRound, UsersRound,
 } from "lucide-react";
 import type { CurrentMembership, DashboardRole } from "@/lib/data/dashboard";
@@ -26,7 +26,7 @@ function navFor(role: DashboardRole, locationSlug: string) {
       ["/dashboard/students", Stethoscope, "Student List"],
       ["/dashboard/kudos", HeartHandshake, "Kudos Review"],
       ["/dashboard/content", FilePenLine, "Edit Content"],
-      ...(role === "platform_admin" ? [["/dashboard/feedback", MessageSquareHeart, "Feedback"] as const] : []),
+      ...(role === "platform_admin" ? [["/dashboard/feedback", MessageSquareHeart, "Feedback"] as const, ["/dashboard/visitors", BarChart3, "Visitors"] as const] : []),
       notes,
     ] as const;
   }
