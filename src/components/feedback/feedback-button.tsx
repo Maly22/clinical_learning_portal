@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { MessageSquareHeart, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { PhoneHandoff } from "@/components/phone-handoff";
 
 const RATINGS = [1, 2, 3, 4, 5];
 
@@ -88,6 +89,7 @@ export function FeedbackButton({ className = "feedback-trigger" }: { className?:
 
             {error && <div className="form-error" role="alert">{error}</div>}
             <button className="button auth-submit" disabled={busy}>{busy ? "Sending…" : "Send feedback"}</button>
+            <PhoneHandoff compact hint="Scan to open this page on your phone, then tap “Help us improve this portal.”" />
           </form>
         )}
       </dialog>

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getLocationBySlug, getLocationDepartments } from "@/lib/data/locations";
 import { KudosForm } from "./kudos-form";
+import { PhoneHandoff } from "@/components/phone-handoff";
 
 export default async function SubmitKudosPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ department?: string }> }) {
   const { slug } = await params;
@@ -17,6 +18,7 @@ export default async function SubmitKudosPage({ params, searchParams }: { params
         departments={departments.map((item) => ({ id: item.id, name: item.display_name || item.departments?.name || "Department" }))}
         defaultDepartmentId={department}
       />
+      <PhoneHandoff hint="Scan to submit your kudos from your phone." />
     </section>
   );
 }
