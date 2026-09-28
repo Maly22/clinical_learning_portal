@@ -4,6 +4,7 @@ import { CheckCircle2, HeartHandshake, NotebookPen, UsersRound } from "lucide-re
 import { getCurrentMembership } from "@/lib/data/dashboard";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardShell } from "./dashboard-shell";
+import { TourButton } from "@/components/guided-tour";
 
 export default async function DashboardPage() {
   const membership = await getCurrentMembership();
@@ -45,8 +46,8 @@ export default async function DashboardPage() {
 
   return (
     <DashboardShell membership={membership} activeHref="/dashboard">
-      <div className="welcome"><div><h1>Welcome back, {membership.firstName}.</h1><p>{membership.locationName} · {membership.afscCode}</p></div></div>
-      <div className="stats-grid">
+      <div className="welcome"><div><h1>Welcome back, {membership.firstName}.</h1><p>{membership.locationName} · {membership.afscCode}</p></div>{(membership.role === "supervisor" || membership.role === "platform_admin") && <TourButton />}</div>
+      <div className="stats-grid" data-tour="stats">
         {stats.map(([label, value, detail]) => <article className="stat-card" key={label}><small>{label}</small><strong>{value}</strong><span>{detail}</span></article>)}
       </div>
       <div className="quick-grid">

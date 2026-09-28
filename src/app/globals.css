@@ -374,3 +374,18 @@
 .visitor-pages ol{list-style:none;margin:12px 0 0;padding:0}.visitor-pages li{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf0ef;font-size:13px}.visitor-pages li:last-child{border-bottom:0}.visitor-pages li a{color:var(--navy2);font-weight:600;text-transform:capitalize}.visitor-pages li span{font-weight:700;color:var(--ink)}
 @media(max-width:900px){.visitor-tiles{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.visitor-chart-card,.visitor-pages{padding:16px}.visitor-chart{height:180px}.visitor-col:not(:last-child):not(:nth-last-child(4)):not(:nth-last-child(7)):not(:nth-last-child(10)) .visitor-axis{visibility:hidden}.visitor-col:nth-child(odd):not(:last-child) .visitor-axis{visibility:hidden}}
+
+/* Guided tour */
+.tour{position:fixed;inset:0;z-index:1000}
+.tour-backdrop{position:fixed;inset:0;background:rgba(5,13,29,.62)}
+.tour-spotlight{position:fixed;border-radius:8px;box-shadow:0 0 0 3px var(--sky),0 0 0 9999px rgba(5,13,29,.62);transition:all .25s ease;pointer-events:none}
+.tour-popup{position:fixed;background:white;color:var(--ink);border-radius:10px;padding:18px 18px 14px;box-shadow:0 20px 60px rgba(5,13,29,.4);transition:top .25s ease,left .25s ease,bottom .25s ease}
+.tour-popup h3{font:400 21px Georgia,serif;margin:4px 0 6px}.tour-popup p{margin:0 0 12px;font-size:13px;line-height:1.55;color:#40525a}
+.tour-count{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#1f6fd1}
+.tour-hint{background:var(--sky-tint);border-radius:6px;padding:7px 9px;font-size:12px!important;color:var(--navy2)!important}
+.tour-close{position:absolute;top:10px;right:10px;border:0;background:none;color:#7b898e;cursor:pointer;padding:4px}
+.tour-actions{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tour-back{border:0;background:none;color:#5e7078;font-size:12px;font-weight:700;cursor:pointer;padding:8px 4px}
+.tour-arrow{position:absolute;width:14px;height:14px;background:white;transform:rotate(45deg)}
+.tour-arrow.left{left:-7px;margin-top:-7px}.tour-arrow.up{top:-7px;margin-left:-7px}.tour-arrow.down{bottom:-7px;margin-left:-7px}
+.tour-replay{border:1px solid var(--sky-tint-border);background:white;color:var(--navy2);border-radius:4px;padding:9px 13px;font-size:12px;font-weight:700;cursor:pointer}.tour-replay:hover{background:var(--sky-tint)}

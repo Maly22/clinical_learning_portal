@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FeedbackButton } from "@/components/feedback/feedback-button";
+import { GuidedTour, type TourStep } from "@/components/guided-tour";
 import {
   BarChart3, CalendarDays, ClipboardCheck, ClipboardList, FilePenLine, HeartHandshake, LayoutDashboard,
   LogOut, MapPin, Menu, MessageSquareHeart, NotebookPen, Stethoscope, UserRound, UsersRound,
@@ -42,6 +43,30 @@ const SHORT_LABEL: Record<string, string> = {
   "Kudos Review": "Kudos", "Edit Content": "Content", "Student Checklists": "Checklists", "Kudos Received": "Kudos", "Submit Kudos": "Kudos",
 };
 
+/** The supervisor/admin walkthrough: each step highlights a real button (`data-tour`). */
+function staffTour(role: DashboardRole): TourStep[] {
+  const admin = role === "platform_admin";
+  return [
+    { title: admin ? "Welcome to your admin dashboard" : "Welcome to your supervisor dashboard", body: "This quick tour shows where everything is and what each button does. It takes about a minute. Use Next and Back, or your keyboard arrows." },
+    { target: "/dashboard", title: "Home", body: "Your starting point. It shows what needs your attention at your location and shortcuts to common tasks." },
+    { target: "stats", title: "At a glance", body: "Pending role requests, pending kudos, and how many members are active at your location. If a number isn't zero, something is waiting for you." },
+    { target: "/dashboard/approvals", title: "Pending Users", body: "People who signed up and are waiting for access. Check their requested role and location, then approve (✓) or reject (✕)." },
+    { target: "/dashboard/users", title: "Manage Users", body: admin ? "Everyone with access to your location. As platform admin, you can change anyone's role here — including handing admin over to someone else." : "Everyone with active access to your location, with their email and role." },
+    { target: "/dashboard/schedules", title: "Assign Schedules", body: "Create classes, enroll students, and upload the schedule each student or class should see in their dashboard." },
+    { target: "/dashboard/students", title: "Student List", body: "Every student at your location: their class, whether a schedule is uploaded, and how many notes you have on them. Open one to see details." },
+    { target: "/dashboard/kudos", title: "Kudos Review", body: "Recognition that students submit about preceptors waits here. Approve it to publish on the department page, or reject it." },
+    { target: "/dashboard/content", title: "Edit Content", body: "Update what students see — handbook, FAQs, departments, procedures, contacts, and events. Saved changes go live right away." },
+    ...(admin ? [
+      { target: "/dashboard/feedback", title: "Feedback", body: "Answers to the “Help us improve this portal” survey, with ratings and comments you can filter by role." },
+      { target: "/dashboard/visitors", title: "Visitors", body: "How many people visit the portal each week and month, and which pages are most popular." },
+    ] : []),
+    { target: "/dashboard/notes", title: "Notes", body: "Private notes that only you can see — handy for reminders and follow-ups." },
+    { target: "feedback-button", title: "Help us improve", body: "Found a problem or have an idea? Send quick feedback from the bottom of any page." },
+    { target: "logout", title: "Log out", body: "Sign out when you're done, especially on a shared computer." },
+    { title: "You're all set!", body: "You can replay this tour anytime with the “Take the tour” button on your dashboard home." },
+  ];
+}
+
 /** Staff get their most-used pages in the phone bar; everyone else gets the first four. */
 const STAFF_PRIMARY = ["/dashboard", "/dashboard/approvals", "/dashboard/kudos", "/dashboard/content"];
 
@@ -60,17 +85,17 @@ export function DashboardShell({ membership, activeHref, children }: { membershi
         <span className="role-pill">{ROLE_LABEL[membership.role]} portal</span>
         <nav className="side-nav">
           {nav.map(([href, Icon, label]) => (
-            <Link href={href} key={label} className={href === activeHref ? "active" : ""}><Icon size={17} /><span>{label}</span></Link>
+            <Link href={href} key={label} data-tour={href} className={href === activeHref ? "active" : ""}><Icon size={17} /><span>{label}</span></Link>
           ))}
-          <form action="/auth/sign-out" method="post"><button type="submit"><LogOut size={17} /><span>Log out</span></button></form>
+          <form action="/auth/sign-out" method="post"><button type="submit" data-tour="logout"><LogOut size={17} /><span>Log out</span></button></form>
         </nav>
         {/* Phone-only bottom bar: four main pages plus a "More" sheet with everything else. */}
         <nav className="mobile-nav" aria-label="Dashboard">
           {primary.map(([href, Icon, label]) => (
-            <Link href={href} key={label} className={href === activeHref ? "active" : ""}><Icon size={19} /><span>{SHORT_LABEL[label] ?? label}</span></Link>
+            <Link href={href} key={label} data-tour={href} className={href === activeHref ? "active" : ""}><Icon size={19} /><span>{SHORT_LABEL[label] ?? label}</span></Link>
           ))}
           <details className="mobile-more">
-            <summary className={moreActive ? "active" : ""}><Menu size={19} /><span>More</span></summary>
+            <summary data-tour="more" className={moreActive ? "active" : ""}><Menu size={19} /><span>More</span></summary>
             <div className="mobile-more-sheet">
               <div className="mobile-more-head"><span className="avatar">{initials}</span><div><strong>{membership.firstName} {membership.lastName}</strong><small>{ROLE_LABEL[membership.role]} · {membership.locationName}</small></div></div>
               {more.map(([href, Icon, label]) => (
@@ -85,7 +110,8 @@ export function DashboardShell({ membership, activeHref, children }: { membershi
       </aside>
       <section className="dashboard-main">
         <header className="dash-topbar"><Link href="/" className="dash-topbar-brand" aria-label="PhasePrep home"><Stethoscope size={16} /></Link><span className="location-select"><MapPin size={14} /> {membership.locationName || "—"} · {membership.afscCode}</span></header>
-        <div className="dash-content">{children}<div className="dash-feedback"><FeedbackButton className="feedback-trigger dark" /></div></div>
+        <div className="dash-content">{children}<div className="dash-feedback" data-tour="feedback-button"><FeedbackButton className="feedback-trigger dark" /></div></div>
+        {isStaff && activeHref === "/dashboard" && <GuidedTour steps={staffTour(membership.role)} storageKey={`pp_tour_${membership.role}_v1`} />}
       </section>
     </div>
   );
