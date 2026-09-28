@@ -13,14 +13,40 @@ type Rect = { top: number; left: number; width: number; height: number };
 const PAD = 6;
 const POPUP_W = 320;
 
-/** The first *visible* element for a target — the sidebar on computers, the bottom bar on phones. */
+/** Really on screen: has a size and isn't inside a closed menu (browsers still report sizes for those). */
+const isVisible = (el: Element) => {
+  if (el.closest("details:not([open]) > :not(summary)")) return false;
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.height > 0;
+};
+
+/** The phone "More" menu, if it's on screen (it isn't on computers). */
+function moreMenu() {
+  const menu = document.querySelector<HTMLDetailsElement>("details.mobile-more");
+  const summary = menu?.querySelector("summary");
+  return menu && summary && isVisible(summary) ? menu : null;
+}
+
+/**
+ * The first *visible* element for a target — the sidebar on computers, the bottom bar on phones.
+ * On phones, pages that don't fit in the bottom bar live under "More": the tour opens that menu
+ * so it can point at the real item inside it.
+ */
 function findTarget(target: string): { el: HTMLElement; viaMore: boolean } | null {
-  const visible = (el: Element) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
-  const match = [...document.querySelectorAll<HTMLElement>(`[data-tour="${CSS.escape(target)}"]`)].find(visible);
-  if (match) return { el: match, viaMore: false };
-  // On phones, pages that don't fit in the bottom bar live under "More".
-  const more = [...document.querySelectorAll<HTMLElement>('[data-tour="more"]')].find(visible);
-  return more ? { el: more, viaMore: true } : null;
+  const selector = `[data-tour="${CSS.escape(target)}"]`;
+  const match = [...document.querySelectorAll<HTMLElement>(selector)].find(isVisible);
+  if (match) return { el: match, viaMore: !!match.closest(".mobile-more-sheet") };
+  const menu = moreMenu();
+  if (!menu) return null;
+  menu.open = true;
+  const inside = [...menu.querySelectorAll<HTMLElement>(selector)].find(isVisible);
+  return inside ? { el: inside, viaMore: true } : { el: menu.querySelector("summary") as HTMLElement, viaMore: true };
+}
+
+/** Closes the More menu unless the current step needs it. */
+function closeMoreMenu() {
+  const menu = document.querySelector<HTMLDetailsElement>("details.mobile-more");
+  if (menu) menu.open = false;
 }
 
 export function GuidedTour({ steps, storageKey }: { steps: TourStep[]; storageKey: string }) {
@@ -54,6 +80,7 @@ export function GuidedTour({ steps, storageKey }: { steps: TourStep[]; storageKe
 
   const finish = useCallback(() => {
     setIndex(null);
+    closeMoreMenu();
     try { localStorage.setItem(storageKey, "done"); } catch { /* ignore */ }
     if (new URLSearchParams(window.location.search).get("tour") === "1") {
       window.history.replaceState(null, "", window.location.pathname);
@@ -74,6 +101,7 @@ export function GuidedTour({ steps, storageKey }: { steps: TourStep[]; storageKe
   useLayoutEffect(() => {
     if (index === null) return;
     const step = steps[index];
+    closeMoreMenu(); // findTarget reopens it when this step's page lives under More
     const found = step.target ? findTarget(step.target) : null;
     found?.el.scrollIntoView({ block: "center", behavior: "smooth" });
     const frame = window.requestAnimationFrame(measure);
@@ -133,7 +161,7 @@ export function GuidedTour({ steps, storageKey }: { steps: TourStep[]; storageKe
         <span className="tour-count">{index + 1} of {steps.length}</span>
         <h3 id="tour-title">{step.title}</h3>
         <p>{step.body}</p>
-        {viaMore && <p className="tour-hint">On your phone, tap <b>More</b> to find it.</p>}
+        {viaMore && <p className="tour-hint">On your phone, this is under <b>More</b> — we opened it for you.</p>}
         <div className="tour-actions">
           {index > 0 ? <button type="button" className="tour-back" onClick={() => setIndex(index - 1)}>Back</button> : <button type="button" className="tour-back" onClick={finish}>Skip tour</button>}
           <button type="button" className="button small" onClick={() => (last ? finish() : setIndex(index + 1))}>{last ? "Finish" : index === 0 ? "Start" : "Next"}</button>

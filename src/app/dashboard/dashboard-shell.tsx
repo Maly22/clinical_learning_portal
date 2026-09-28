@@ -99,10 +99,10 @@ export function DashboardShell({ membership, activeHref, children }: { membershi
             <div className="mobile-more-sheet">
               <div className="mobile-more-head"><span className="avatar">{initials}</span><div><strong>{membership.firstName} {membership.lastName}</strong><small>{ROLE_LABEL[membership.role]} · {membership.locationName}</small></div></div>
               {more.map(([href, Icon, label]) => (
-                <Link href={href} key={label} className={href === activeHref ? "active" : ""}><Icon size={18} /><span>{label}</span></Link>
+                <Link href={href} key={label} data-tour={href} className={href === activeHref ? "active" : ""}><Icon size={18} /><span>{label}</span></Link>
               ))}
               {isStaff && <Link href="/profile" className={activeHref === "/profile" ? "active" : ""}><UserRound size={18} /><span>Profile</span></Link>}
-              <form action="/auth/sign-out" method="post"><button type="submit"><LogOut size={18} /><span>Log out</span></button></form>
+              <form action="/auth/sign-out" method="post"><button type="submit" data-tour="logout"><LogOut size={18} /><span>Log out</span></button></form>
             </div>
           </details>
         </nav>
