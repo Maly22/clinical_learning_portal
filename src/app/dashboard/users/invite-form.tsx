@@ -35,7 +35,7 @@ export function InviteForm({ locationName }: { locationName: string }) {
   return (
     <section className="dash-card invite-card">
       <div className="card-heading"><h2>Invite someone</h2></div>
-      <p className="invite-hint">They’ll get an email with a sign-up link for {locationName || "your location"}. Once they sign up, approve them in Pending Users.</p>
+      <p className="invite-hint">They’ll get an email with a sign-up link for {locationName || "your location"}. Once they sign up, approve them in Pending Users. A personal email is more reliable — military email filters often block messages with links.</p>
       <form className="inline-form" onSubmit={submit}>
         <input name="first_name" placeholder="First name (optional)" autoComplete="off" />
         <input name="email" type="email" inputMode="email" placeholder="Email address" required />
