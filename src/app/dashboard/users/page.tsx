@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentMembership } from "@/lib/data/dashboard";
 import { DashboardShell } from "../dashboard-shell";
 import { RoleSelect } from "./role-select";
+import { InviteForm } from "./invite-form";
 
 export default async function ManageUsersPage() {
   const membership = await getCurrentMembership();
@@ -24,6 +25,7 @@ export default async function ManageUsersPage() {
   return (
     <DashboardShell membership={membership} activeHref="/dashboard/users">
       <div className="approval-page-head"><span className="eyebrow">Supervisor tools</span><h1>Manage users</h1><p>Everyone with active access to {membership.locationName}.{isAdmin && " As platform admin, you can change anyone’s role here — to hand over admin, make someone else Platform admin first, then change your own role."}</p></div>
+      <InviteForm locationName={membership.locationName} />
       <section className="queue-card manage-users-table">
         <div className="table-row table-head"><span>Name</span><span>Email</span><span>Role</span></div>
         {(members ?? []).map((member) => {

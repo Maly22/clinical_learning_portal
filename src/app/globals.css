@@ -389,3 +389,4 @@
 .tour-arrow{position:absolute;width:14px;height:14px;background:white;transform:rotate(45deg)}
 .tour-arrow.left{left:-7px;margin-top:-7px}.tour-arrow.up{top:-7px;margin-left:-7px}.tour-arrow.down{bottom:-7px;margin-left:-7px}
 .tour-replay{border:1px solid var(--sky-tint-border);background:white;color:var(--navy2);border-radius:4px;padding:9px 13px;font-size:12px;font-weight:700;cursor:pointer}.tour-replay:hover{background:var(--sky-tint)}
+.invite-card{margin-bottom:18px}.invite-card .card-heading{margin-bottom:8px}.invite-hint{color:#6d7e84;font-size:12px;line-height:1.6;margin:0 0 14px}.invite-card .inline-form input{flex:1 1 180px;min-width:0}.invite-card .form-success,.invite-card .form-error{margin-top:12px}
